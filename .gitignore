@@ -1,0 +1,12 @@
+# Ignore environment file
+.env
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore specific folders
+1.pdf-input/
+3.txt-output-saved/
+archived-img/
+archived-pdf/
+diagram/
