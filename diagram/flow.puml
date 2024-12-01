@@ -1,0 +1,27 @@
+@startuml
+title Quy trình trích xuất văn bản từ PDF
+
+start
+
+partition "Process 1: Chuyển PDF thành ảnh" {
+  :Đọc file PDF;
+  while (Còn trang trong PDF?) is (yes)
+    :Chuyển trang thành ảnh PNG;
+    :Lưu ảnh (page_X.png);
+  endwhile (no)
+}
+
+partition "Process 2: Trích xuất text từ ảnh" {
+  while (Còn file PNG?) is (yes)
+    :Đọc file ảnh;
+    :Chuyển ảnh sang base64;
+    :Gửi request tới Gemini API;
+    :Nhận kết quả text;
+    :Lưu text vào file .txt;
+  endwhile (no)
+}
+
+:Hoàn thành trích xuất văn bản;
+
+stop
+@enduml

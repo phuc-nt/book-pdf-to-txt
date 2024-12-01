@@ -1,0 +1,48 @@
+@startuml
+title Sequence Diagram - Trích xuất văn bản từ PDF
+
+actor User
+participant "PDF Processor" as PDF
+participant "Image Processor" as Image
+participant "Gemini API" as API
+database "File System" as FS
+
+== Process 1: PDF to Images ==
+User -> PDF: Yêu cầu xử lý PDF
+activate PDF
+
+PDF -> FS: Đọc file PDF
+activate FS
+FS --> PDF: Trả về nội dung PDF
+deactivate FS
+
+loop Cho mỗi trang trong PDF
+    PDF -> PDF: Chuyển trang thành ảnh
+    PDF -> FS: Lưu file PNG
+end
+deactivate PDF
+
+== Process 2: Images to Text ==
+User -> Image: Yêu cầu trích xuất text
+activate Image
+
+loop Cho mỗi file PNG
+    Image -> FS: Đọc file PNG
+    activate FS
+    FS --> Image: Trả về nội dung ảnh
+    deactivate FS
+    
+    Image -> Image: Chuyển ảnh sang base64
+    
+    Image -> API: Gửi request (ảnh + prompt)
+    activate API
+    API --> Image: Trả về text được trích xuất
+    deactivate API
+    
+    Image -> FS: Lưu text vào file .txt
+end
+
+Image --> User: Hoàn thành trích xuất
+deactivate Image
+
+@enduml
